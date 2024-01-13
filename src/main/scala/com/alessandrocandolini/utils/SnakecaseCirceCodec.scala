@@ -23,5 +23,6 @@ object SnakecaseCirceCodec:
       def apply(c: HCursor): Decoder.Result[A] =
         derived.apply(c)
 
-      override def apply(a: A): Json = derived.apply(a).dropNullValues // drop null values by default, avoid deepdrop recursively
+      override def apply(a: A): Json =
+        derived.apply(a).dropNullValues // drop null values by default, avoid deepdrop recursively
     }

@@ -14,7 +14,8 @@ object SimpleConsole:
 given simpleConsole[F[_]: Console]: SimpleConsole[F] with
   def println[A: Show](a: A): F[Unit] = Console[F].println(a)
 
-def printLeft[F[_]: Applicative: SimpleConsole, E: Show, A]: Stream[F, Either[E, A]] => Stream[F, Either[E, A]] = _.evalTap {
+def printLeft[F[_]: Applicative: SimpleConsole, E: Show, A]
+  : Stream[F, Either[E, A]] => Stream[F, Either[E, A]] = _.evalTap {
   case Left(e)  => SimpleConsole[F].println(e)
   case Right(_) => Applicative[F].unit
 }

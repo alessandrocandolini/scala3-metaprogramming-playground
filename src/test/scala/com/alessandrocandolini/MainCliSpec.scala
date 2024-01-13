@@ -57,8 +57,7 @@ class PrintLeftPropertiesEffectful extends CatsEffectSuite with ScalaCheckEffect
 
 extension [A](genA: Gen[A])
   def toFinitePureStreamGen: Gen[Stream[Pure, A]] = {
-    def smallLists[T]: Gen[T] => Gen[List[T]] = t =>
-      Gen.posNum[Int].map(_ % 20).flatMap(Gen.listOfN(_, t))
+    def smallLists[T]: Gen[T] => Gen[List[T]] = t => Gen.posNum[Int].map(_ % 20).flatMap(Gen.listOfN(_, t))
 
     Gen.frequency(
       1 -> Gen.const(Stream.empty),
@@ -66,21 +65,17 @@ extension [A](genA: Gen[A])
       5 -> smallLists(genA).map(as => Stream.emits(as).chunkLimit(1).unchunks),
       5 -> smallLists(smallLists(genA))
         .map(
-          _.foldLeft(Stream.empty.covaryOutput[A])((acc, as) =>
-            acc ++ Stream.emits(as)
-          )
+          _.foldLeft(Stream.empty.covaryOutput[A])((acc, as) => acc ++ Stream.emits(as))
         ),
       5 -> smallLists(smallLists(genA))
         .map(
-          _.foldRight(Stream.empty.covaryOutput[A])((as, acc) =>
-            Stream.emits(as) ++ acc
-          )
+          _.foldRight(Stream.empty.covaryOutput[A])((as, acc) => Stream.emits(as) ++ acc)
         )
     )
   }
 
 given [A](using
-    a: Arbitrary[A]
+  a: Arbitrary[A]
 ): Arbitrary[Stream[Pure, A]] = Arbitrary {
   a.arbitrary.toFinitePureStreamGen
 }
