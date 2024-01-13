@@ -1,5 +1,3 @@
 package com.alessandrocandolini.macros
 
-class ZonedDateTimeMacro {
-
-}
+class ZonedDateTimeMacro {}
