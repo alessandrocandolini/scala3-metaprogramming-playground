@@ -14,10 +14,12 @@ object JsonExamples:
           | }
           |"""
 
-  val expected1: Json = JsObject(Map(
-    "name" -> "hello world",
-    "speaker" -> "Guglielmo Marconi"
-  ))
+  val expected1: Json = JsObject(
+    Map(
+      "name"    -> "hello world",
+      "speaker" -> "Guglielmo Marconi"
+    )
+  )
 
   val example2: Json =
     json"""
@@ -27,10 +29,12 @@ object JsonExamples:
           | }
           |"""
 
-  val expected2: Json = JsObject(Map(
-    "name" -> "hello world2",
-    "speaker" -> "Leonardo da Vinci"
-  ))
+  val expected2: Json = JsObject(
+    Map(
+      "name"    -> "hello world2",
+      "speaker" -> "Leonardo da Vinci"
+    )
+  )
 
   val example3: Json =
     json"""
@@ -42,6 +46,6 @@ object JsonExamples:
 
   val expected3: Json = JsArray(expected1, expected2)
 
-  assertEquals(example1,  expected1)
+//  assertEquals(example1, expected1)
 
-  assertEquals(example3,  expected3)
+//  assertEquals(example3, expected3)

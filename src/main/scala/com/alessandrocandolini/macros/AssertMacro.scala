@@ -1,27 +1,26 @@
 package com.alessandrocandolini.macros
 
-import scala.quoted.{Expr, FromExpr, Quotes}
+import scala.compiletime.summonInline
+import scala.quoted.{Expr, FromExpr, Quotes, Type}
 
 object AssertMacro:
+  inline def assertEquals(
+    inline obtained: Int,
+    inline expected: Int
+  ): Unit =
+    ${ assertEqualsImpl('{ obtained }, '{ expected }) }
 
-  inline def assertEquals[A, B](
-                              inline obtained: A,
-                              inline expected: B,
-                              inline clue: => String = "values are not the same")(using CanEqual[A,B], FromExpr[A], FromExpr[B]): Unit =
-    ${  assertEqualsImpl('{obtained}, '{expected}, '{clue})  }
+  private def assertEqualsImpl(
+    obtainedExpr: Expr[Int],
+    expectedExpr: Expr[Int]
+  )(using quotes: Quotes): Expr[Unit] = {
 
+    val obtained = obtainedExpr.valueOrAbort
+    val expected = expectedExpr.valueOrAbort
 
-  def assertEqualsImpl[A,B](
-                             obtained: Expr[A],
-                             expected: Expr[B],
-                             clue: Expr[String]
-                           )(using quotes: Quotes, canEqual: CanEqual[A,B], fromExprA: FromExpr[A], fromExprB: FromExpr[B]): Expr[Unit] = {
-    val a = obtained.valueOrAbort
-    val b = expected.valueOrAbort
-    if (a == b) {
+    if (obtained == expected) {
       '{ () }
     } else {
-      val c = clue.valueOrAbort
-      quotes.reflect.report.errorAndAbort(s": $c")
+      quotes.reflect.report.errorAndAbort(s"values are not the same: expected $expected but got $obtained")
     }
   }

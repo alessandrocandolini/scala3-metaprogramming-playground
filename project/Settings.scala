@@ -10,7 +10,7 @@ object Settings {
       "UTF-8",
       "-feature",
       "-unchecked",
-      "-language:strictEquality",
+//      "-language:strictEquality",
       "-language:postfixOps",
 //      "-Yexplicit-nulls",
       "-source:future",

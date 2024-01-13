@@ -1,3 +1,9 @@
 package com.alessandrocandolini.macros
 
-class ZonedDateTimeMacro {}
+object ZonedDateTimeMacro
+
+//  extension (s: StringContext) {
+//
+//
+//
+//  }
