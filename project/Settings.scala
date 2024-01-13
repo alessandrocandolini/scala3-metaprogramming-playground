@@ -17,6 +17,7 @@ object Settings {
       "-explain",
       "-Wvalue-discard",
       "-Wunused:all",
+      "-Xcheck-macros"
     )
   )
 
