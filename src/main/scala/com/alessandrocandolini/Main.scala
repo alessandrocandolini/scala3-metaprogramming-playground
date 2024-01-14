@@ -3,6 +3,7 @@ package com.alessandrocandolini
 import cats.effect.IO
 import com.monovore.decline.Opts
 import com.alessandrocandolini.cli.Args
+import com.alessandrocandolini.macros.DebugMacro.printAst
 import com.alessandrocandolini.utils.CommandIOAppSimple
 
 object Main
@@ -14,4 +15,10 @@ object Main
 
   override def run: Opts[IO[Unit]] = Args.readArgs.map(program)
 
-  val program: Args => IO[Unit] = args => IO.println(s"hello world! $args")
+  inline def sayHello(name: String): String = s"hello, $name"
+
+  val program: Args => IO[Unit] = args =>
+    val s = printAst {
+      sayHello("world!!")
+    }
+    IO.println(s"$s $args")

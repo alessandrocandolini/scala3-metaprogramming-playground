@@ -21,6 +21,6 @@ object AssertMacro:
     if (obtained == expected) {
       '{ () }
     } else {
-      quotes.reflect.report.errorAndAbort(s"values are not the same: expected $expected but got $obtained")
+      quotes.reflect.report.errorAndAbort(s"values are not the same: expected $expected but got $obtained instead.")
     }
   }
