@@ -9,6 +9,7 @@ object ZonedDateTimeExample:
          2021-12-03T10:15:30Z
     """
 
-  val example2: ZonedDateTime = date"""
-         2021a-02-03T10:15:30Z
-    """
+  // this does not compile
+//  val example2: ZonedDateTime = date"""
+//         2021-02-0T10:15:30Z
+//    """
