@@ -6,8 +6,6 @@ type Json = JsObject | JsArray | String | Null
 
 object Json:
 
-  given CanEqual[Json, Json] = CanEqual.derived
-
   type Null = Null.type
   object Null
 

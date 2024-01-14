@@ -23,19 +23,25 @@ object ZonedDateTimeMacro:
     val context = contextExpr.valueOrAbort
 
     context.asSingleStringOrFail match
-      case Some(s) =>
-        parse(s) match
-          case Left(message)   => fail(message)
-          case Right(dateTime) => Expr(dateTime)
+      case Some(s) => iso8601ParseImpl(Expr(s))
       case None    => fail("string interpolation unsupported", argsExpr)
+  }
+
+  private def iso8601ParseImpl(stringExpr: Expr[String])(using
+    q: Quotes
+  ): Expr[ZonedDateTime] = {
+    val s = stringExpr.valueOrAbort
+    parse(s) match
+      case Left(message)   => fail(message)
+      case Right(dateTime) => Expr(dateTime)
   }
 
   private def parse(s: String): Either[String, ZonedDateTime] =
     Try {
       ZonedDateTime.parse(s)
-    }.toEither.leftMap(errorMessage(s, _))
+    }.toEither.leftMap(prettyErrorMessage(s, _))
 
-  private def errorMessage(s: String, t: Throwable): String = {
+  private def prettyErrorMessage(s: String, t: Throwable): String = {
     val position    = Some(t).collect { case e: DateTimeParseException =>
       e.getErrorIndex
     }
