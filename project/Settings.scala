@@ -94,14 +94,15 @@ object Dependencies {
       "org.typelevel"   %% "scalacheck-effect-munit"        % Versions.scalacheckEffect,
     )
 
-    scalacheck ++ munit ++ extras 
+    scalacheck ++ munit ++ extras
   }.map(_ % Test)
 
 }
 
 object Versions {
 
-  val scala              = "3.4.0-RC1"
+  //val scala              = "3.4.0-RC1"
+  val scala              = "3.3.1"
   val cats               = "2.10.0"
   val fs2                = "3.9.3"
   val catsEffect         = "3.5.2"

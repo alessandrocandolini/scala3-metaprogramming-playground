@@ -22,3 +22,6 @@ object Main
       sayHello("world!!")
     }
     IO.println(s"$s $args")
+
+  def getting =
+    println("hello")
