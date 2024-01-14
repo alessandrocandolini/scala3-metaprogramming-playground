@@ -21,6 +21,8 @@ class SettingsSpec extends FunSuite:
       host = "localhost"
     )
 
+    compileErrors()
+
     val actual = ConfigSource.string(s).load[Settings]
     assertEquals(actual, Right(expected))
 
