@@ -1,7 +1,7 @@
 package com.alessandrocandolini.macros
 
 import scala.compiletime.summonInline
-import scala.quoted.{Expr, FromExpr, Quotes, Type}
+import scala.quoted.{Expr, FromExpr, Quotes}
 
 object AssertMacro:
   inline def assertEquals(

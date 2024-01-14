@@ -1,8 +1,7 @@
 package com.alessandrocandolini.macros
 
-import AssertMacro.assertEquals
-import JsonMacro.json
-import Json.*
+import com.alessandrocandolini.macros.Json.*
+import com.alessandrocandolini.macros.JsonMacro.json
 
 object JsonExamples:
 
