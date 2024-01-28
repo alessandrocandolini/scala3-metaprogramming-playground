@@ -61,6 +61,9 @@ object Parser:
       p.repeat.map(_.toList).orElse(pure(List.empty))
   }
 
+  def parenthesis[A](parser: Parser[A]): Parser[A] =
+    openBrace.void *> parser <* closeBrace.void
+
   def optionalParenthesis[A](parser: Parser[A]): Parser[A] =
     openBrace.optional.void *> parser <* closeBrace.optional.void
 

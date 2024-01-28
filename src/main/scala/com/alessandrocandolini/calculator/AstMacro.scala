@@ -23,8 +23,8 @@ object AstMacro:
 
     stringContext.asSingleStringOrFail match {
       case Some(s) =>
-        GrammarParser.parseAll(s) match
-          case Some(_) => '{ GrammarParser.parseAll(${ Expr(s) }).get } // need to find a way to ave ExprrTo
+        GrammarParser.parseAst(s) match
+          case Some(_) => '{ GrammarParser.parseAst(${ Expr(s) }).get } // need to find a way to ave ExprrTo
           case None    => fail(s"error parsing $s")
       case None    => fail("string interpolation unsupported", argsExpr)
     }
@@ -37,7 +37,7 @@ object AstMacro:
 
     stringContext.asSingleStringOrFail match {
       case Some(s) =>
-        GrammarParser.parseAll(s) match
+        GrammarParser.parseAst(s) match
           case Some(ast) =>
             ast.evaluate match
               case Left(value)  => fail(s"error interpreting $s: ${value.message}")

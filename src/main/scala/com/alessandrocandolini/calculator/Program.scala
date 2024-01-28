@@ -24,6 +24,6 @@ object Program:
     }
 
   def logic(s: String): Either[ProgramError, Int] = for {
-    ast <- GrammarParser.parseAll(s).toRight(ProgramError.ParsingError)
+    ast <- GrammarParser.parseAst(s).toRight(ProgramError.ParsingError)
     res <- ast.evaluate.leftMap(ProgramError.InterpreterError.apply)
   } yield res
