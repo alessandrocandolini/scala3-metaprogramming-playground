@@ -1,6 +1,7 @@
 package com.alessandrocandolini.calculator
 
 import com.alessandrocandolini.calculator.AstF.Ast
+import higherkindness.droste.GAlgebra
 
 enum EvalError:
   case DivisionByZero

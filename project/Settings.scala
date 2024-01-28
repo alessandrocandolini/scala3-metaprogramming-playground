@@ -106,7 +106,7 @@ object Versions {
   val scala              = "3.3.1"
   val cats               = "2.10.0"
   val fs2                = "3.9.3"
-  val catsEffect         = "3.5.2"
+  val catsEffect         = "3.5.3"
   val kittens            = "3.1.0"
   val pureConfig         = "0.17.4"
   val decline            = "2.4.1"

@@ -12,6 +12,8 @@ private enum AstF[A, B]:
 enum BinaryOperation:
   case Add
   case Multiply
+  case Subtract
+  case Divide
 
 object AstF:
 
@@ -32,4 +34,8 @@ object AstF:
     def +(value2: Ast[A]): Ast[A] = binaryOperation(BinaryOperation.Add, value1, value2)
     @targetName("multiply")
     def *(value2: Ast[A]): Ast[A] = binaryOperation(BinaryOperation.Multiply, value1, value2)
+    @targetName("subtract")
+    def -(value2: Ast[A]): Ast[A] = binaryOperation(BinaryOperation.Subtract, value1, value2)
+    @targetName("divide")
+    def /(value2: Ast[A]): Ast[A] = binaryOperation(BinaryOperation.Divide, value1, value2)
   }

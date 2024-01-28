@@ -1,6 +1,7 @@
 package com.alessandrocandolini
 
-import cats.effect.IO
+import cats.effect.{ExitCode, IO}
+import com.alessandrocandolini.calculator.Program
 import com.monovore.decline.Opts
 import com.alessandrocandolini.cli.Args
 import com.alessandrocandolini.macros.DebugMacro.printAst
@@ -13,15 +14,6 @@ object Main
       version = "0.1"
     ):
 
-  override def run: Opts[IO[Unit]] = Args.readArgs.map(program)
+  override def run: Opts[IO[ExitCode]] = Args.readArgs.map(program)
 
-  inline def sayHello(name: String): String = s"hello, $name"
-
-  val program: Args => IO[Unit] = args =>
-    val s = printAst {
-      sayHello("world!!")
-    }
-    IO.println(s"$s $args")
-
-  def getting =
-    println("hello")
+  val program: Args => IO[ExitCode] = args => Program.run(args.eval)

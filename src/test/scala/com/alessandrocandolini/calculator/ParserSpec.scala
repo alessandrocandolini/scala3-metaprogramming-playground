@@ -1,5 +1,6 @@
 package com.alessandrocandolini.calculator
 
+import cats.implicits.{catsSyntaxApplyOps, catsSyntaxTuple2Semigroupal}
 import com.alessandrocandolini.DefaultSuite
 import com.alessandrocandolini.calculator.Parser.*
 
@@ -30,5 +31,29 @@ class ParserSpec extends DefaultSuite:
     assertEquals(
       booleanCaseInsensitive.parseAll("True"),
       Some(true)
+    )
+  }
+
+  test("digit can parse a single digit as char") {
+    assertEquals(
+      digit.parseAll("1"),
+      Some('1')
+    )
+  }
+
+  test("digits can parse multiple digits") {
+    assertEquals(
+      digits.parseAll("1234"),
+      Some(1234)
+    )
+  }
+
+  test("can compose with other parsers") {
+
+    val p = (digits, spaces *> string("hello")).tupled
+
+    assertEquals(
+      p.parseAll("1234  hello"),
+      Some((1234, "hello"))
     )
   }

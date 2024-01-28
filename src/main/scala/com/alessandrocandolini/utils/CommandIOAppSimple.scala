@@ -10,5 +10,5 @@ abstract class CommandIOAppSimple(
   helpFlag: Boolean = true,
   version: String = ""
 ) extends CommandIOApp(name, header, helpFlag, version):
-  def run: Opts[IO[Unit]]
-  final def main: Opts[IO[ExitCode]] = run.map(_.as(ExitCode.Success))
+  def run: Opts[IO[ExitCode]]
+  final def main: Opts[IO[ExitCode]] = run

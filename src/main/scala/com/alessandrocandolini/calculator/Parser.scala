@@ -2,7 +2,7 @@ package com.alessandrocandolini.calculator
 
 import cats.implicits.*
 import cats.data.{NonEmptyList, NonEmptySet, StateT}
-import cats.FunctorFilter
+import cats.{Applicative, FunctorFilter}
 
 type Parser[A] = StateT[Option, String, A]
 
@@ -33,7 +33,7 @@ object Parser:
 
   def char(c: Char): Parser[Char] = anyChar.filter(c1 => c1 == c)
 
-  def string(s: String): Parser[String] = s.toList.traverse(char).map(_.toString())
+  def string(s: String): Parser[String] = s.toList.traverse(char).map(_.mkString)
 
   def boolean: Parser[Boolean] =
     string("true").as(true).orElse(string("false").as(false))
@@ -45,7 +45,19 @@ object Parser:
   val closeBrace: Parser[Unit] = char(')').void
   val newline: Parser[Unit]    = char('\n').void
   val space: Parser[Unit]      = char(' ').void
-//  val spaces : Parser[Unit] = repeat0(space)
 
   def parenthesis[A](parser: Parser[A]): Parser[A] =
     openBrace *> parser <* closeBrace
+
+  extension [A](p: Parser[A]) {
+    def repeat: Parser[List[A]] =
+      p.map(a => List(a)).flatMap { as =>
+        p.repeat.map(b => as ++ b).orElse(Applicative[Parser].pure(as))
+      }
+  }
+
+  val spaces: Parser[Unit] = space.repeat.void
+
+  def digit: Parser[Char] = anyChar.filter(_.isDigit)
+
+  def digits: Parser[Int] = digit.repeat.mapFilter(_.mkString.toIntOption)
