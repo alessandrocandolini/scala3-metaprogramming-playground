@@ -16,3 +16,11 @@ class InterpreterSpec extends DefaultSuite:
       Right(55)
     )
   }
+
+  test("evaluate simple ast with division by 0") {
+    val ast: Ast[Int] = (literal(3) + literal(4)) / ((literal(2) * literal(3)) - literal(5) - literal(1))
+    assertEquals(
+      ast.evaluate,
+      Left(EvalError.CannotDivideByZero)
+    )
+  }
