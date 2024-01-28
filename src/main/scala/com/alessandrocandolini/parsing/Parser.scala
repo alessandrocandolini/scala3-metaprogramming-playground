@@ -7,10 +7,10 @@ import cats.data.StateT
 
 enum Parser[+A]:
   case Pure(a: A)
-  case CharParser(c : Char)
-  case CharCaseInsensitiveParser(c : Char)
+  case CharParser(c: Char)
+  case CharCaseInsensitiveParser(c: Char)
   case Digit
-  case OrElse(p1 : Parser[A], p2 : Parser[A])
+  case OrElse(p1: Parser[A], p2: Parser[A])
 
 object Parser:
 
@@ -21,4 +21,3 @@ object Parser:
       s.tail -> c
     }
   }
-

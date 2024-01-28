@@ -27,7 +27,7 @@ object ColorConsole:
   val redCross: String =
     ANSI_RED + CROSS + ANSI_RESET
 
-  def printColourMessage(message : String, isSuccessful: Boolean) : String =
+  def printColourMessage(message: String, isSuccessful: Boolean): String =
     if (isSuccessful) {
       greenTick ++ " " ++ printGreen(message)
     } else {

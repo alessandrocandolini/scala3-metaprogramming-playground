@@ -1,10 +1,12 @@
 package com.alessandrocandolini.calculator
 
+import cats.{Foldable, Functor, Traverse}
 import higherkindness.droste.data.Fix
+import cats.derived.*
 
 import scala.annotation.targetName
 
-private enum AstF[A, B]:
+enum AstF[A, B] derives Functor, Foldable, Traverse:
   case LiteralF(value: A)
   case BinaryOperationF(operation: BinaryOperation, value1: B, value2: B)
   case NegateF(value: B)
@@ -19,7 +21,8 @@ object AstF:
 
   type Ast[A] = Fix[[B] =>> AstF[A, B]]
 
-  def literal[A](value: A): Ast[A]                                                           = Fix(LiteralF(value))
+  def literal[A](value: A): Ast[A] = Fix(LiteralF(value))
+
   def binaryOperation[A](operation: BinaryOperation, value1: Ast[A], value2: Ast[A]): Ast[A] =
     Fix(BinaryOperationF(operation, value1, value2))
 
