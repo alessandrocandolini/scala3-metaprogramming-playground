@@ -57,7 +57,8 @@ object Dependencies {
     val advanced = Seq(
       "io.github.arainko" %% "ducktape" % Versions.ducktape,
       "io.github.iltotore" %% "iron" % Versions.iron,
-      "org.typelevel" %% "cats-parse" % Versions.catsParse
+      "org.typelevel" %% "cats-parse" % Versions.catsParse,
+      "io.higherkindness" %% "droste-core" % Versions.droste
     )
 
     val postgres = Seq(
@@ -112,6 +113,7 @@ object Versions {
   val catsParse          = "1.0.0"
   val ducktape           = "0.1.11"
   val iron               = "2.3.0"
+  val droste             = "0.9.0"
 
   val tapir              = "1.9.0"
   val circe              = "0.14.6"

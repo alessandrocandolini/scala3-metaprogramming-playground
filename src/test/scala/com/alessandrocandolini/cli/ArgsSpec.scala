@@ -17,48 +17,15 @@ class ArgsSpec extends FunSuite:
   test("opts can parse valid args with stage env") {
     val actual   = command.parse(
       Seq(
-        "-p",
-        "5",
-        "--stage",
+        "-e",
+        "something",
         "--verbose"
       )
     )
     val expected = Args(
-      port = 5,
-      env = Env.Stage,
+      eval = "something",
       verbose = Verbose.Verbose
     )
 
     assertEquals(actual, Right(expected))
-  }
-
-  test("opts can parse valid args with prod env") {
-    val actual   = command.parse(
-      Seq(
-        "-p",
-        "5",
-        "--prod"
-      )
-    )
-    val expected = Args(
-      port = 5,
-      env = Env.Prod,
-      verbose = Args.defaultVerbose
-    )
-
-    assertEquals(actual, Right(expected))
-  }
-
-  test("opts can parse valid args without stage/prod flag and port") {
-    val actual   = command.parse(
-      Seq()
-    )
-    val expected = Args(
-      port = Args.defaultPort,
-      env = Args.defaultEnv,
-      verbose = Args.defaultVerbose
-    )
-
-    assertEquals(actual, Right(expected))
-
   }
