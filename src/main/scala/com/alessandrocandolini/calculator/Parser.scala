@@ -1,8 +1,10 @@
 package com.alessandrocandolini.calculator
 
+import cats.Applicative
+import cats.data.{NonEmptyList, StateT}
 import cats.implicits.*
-import cats.data.{NonEmptyList, NonEmptySet, StateT}
-import cats.{Applicative, FunctorFilter}
+
+import scala.annotation.targetName
 
 type Parser[A] = StateT[Option, String, A]
 
@@ -35,13 +37,18 @@ object Parser:
 
   def char(c: Char): Parser[Char] = anyChar.filter(c1 => c1 == c)
 
+  def charCaseInsensitive(c: Char): Parser[Char] = anyChar.filter(c1 => c1.toLower == c.toLower)
+
   def string(s: String): Parser[String] = s.toList.traverse(char).map(_.mkString)
+
+  def stringCaseInsensitive(s: String): Parser[String] =
+    s.toList.traverse(charCaseInsensitive).map(_.mkString)
 
   def boolean: Parser[Boolean] =
     string("true").as(true).orElse(string("false").as(false))
 
   def booleanCaseInsensitive: Parser[Boolean] =
-    choose(string("true"), string("True")).as(true).orElse(choose(string("false"), string("False")).as(false))
+    choose(stringCaseInsensitive("true").as(true), stringCaseInsensitive("False").as(false))
 
   val openBrace: Parser[Unit]  = char('(').void
   val closeBrace: Parser[Unit] = char(')').void
@@ -57,6 +64,7 @@ object Parser:
 
     def repeat0: Parser[List[A]] =
       p.repeat.map(_.toList).orElse(pure(List.empty))
+
   }
 
   def parenthesis[A](parser: Parser[A]): Parser[A] =
