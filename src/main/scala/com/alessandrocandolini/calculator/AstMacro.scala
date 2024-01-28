@@ -40,8 +40,8 @@ object AstMacro:
         GrammarParser.parseAst(s) match
           case Some(ast) =>
             ast.evaluate match
-              case Left(value)  => fail(s"error interpreting $s: ${value.message}")
-              case Right(value) => Expr(value)
+              case Left(EvalError.CannotDivideByZero) => fail("division by zero not defined")
+              case Right(value)                       => Expr(value)
           case None      => fail(s"error parsing $s")
       case None    => fail("string interpolation unsupported", argsExpr)
     }

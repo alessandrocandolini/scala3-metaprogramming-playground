@@ -10,16 +10,16 @@ enum ProgramError:
 
 object ProgramError:
   extension (e: ProgramError) {
-    def message: String = e match
-      case ProgramError.ParsingError        => "parser error"
-      case ProgramError.InterpreterError(e) => s"evaluation error: ${e.message}"
+    def consoleMessage: String = e match
+      case ProgramError.ParsingError                                   => "parser error"
+      case ProgramError.InterpreterError(EvalError.CannotDivideByZero) => s"division by zero is not defined"
   }
 
 object Program:
 
   def run(s: String): IO[ExitCode] =
     logic(s) match {
-      case Left(value)  => IO.println(s"Failure: ${value.message}").as(ExitCode.Error)
+      case Left(value)  => IO.println(s"Failure: ${value.consoleMessage}").as(ExitCode.Error)
       case Right(value) => IO.println(s"Result: $value").as(ExitCode.Success)
     }
 

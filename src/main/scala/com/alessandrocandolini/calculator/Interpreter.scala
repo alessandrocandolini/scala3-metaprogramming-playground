@@ -7,12 +7,6 @@ import higherkindness.droste.{GAlgebraM, scheme}
 enum EvalError:
   case CannotDivideByZero
 
-object EvalError:
-  extension (e: EvalError) {
-    def message: String = e match
-      case CannotDivideByZero => "cannot divide by 0"
-  }
-
 object Interpreter:
 
   extension (input: Ast[Int]) {
