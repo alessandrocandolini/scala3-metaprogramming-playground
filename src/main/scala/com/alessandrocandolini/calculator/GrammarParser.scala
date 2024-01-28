@@ -2,15 +2,7 @@ package com.alessandrocandolini.calculator
 
 import cats.implicits.*
 import com.alessandrocandolini.calculator.AstF.{Ast, *}
-import com.alessandrocandolini.calculator.Parser.{
-  char,
-  choose,
-  digits,
-  optionalParenthesis,
-  parenthesis,
-  parseAll,
-  string
-}
+import com.alessandrocandolini.calculator.Parser.{char, choose, digits, parenthesis, parseAll, string}
 
 import scala.language.implicitConversions
 

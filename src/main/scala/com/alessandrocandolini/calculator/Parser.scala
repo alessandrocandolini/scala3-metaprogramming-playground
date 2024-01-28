@@ -50,8 +50,6 @@ object Parser:
 
   extension [A](p: Parser[A]) {
 
-    def optional: Parser[Option[A]] = p.map(Some.apply).orElse(pure(None))
-
     def repeat: Parser[NonEmptyList[A]] =
       p.map(a => NonEmptyList.of(a)).flatMap { as =>
         p.repeat.map(b => as <+> b).orElse(pure(as))
@@ -63,9 +61,6 @@ object Parser:
 
   def parenthesis[A](parser: Parser[A]): Parser[A] =
     openBrace.void *> parser <* closeBrace.void
-
-  def optionalParenthesis[A](parser: Parser[A]): Parser[A] =
-    openBrace.optional.void *> parser <* closeBrace.optional.void
 
   val spaces: Parser[Unit] = space.repeat0.void
 

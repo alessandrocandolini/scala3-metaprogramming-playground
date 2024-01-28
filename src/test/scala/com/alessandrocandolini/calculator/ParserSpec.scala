@@ -68,9 +68,9 @@ class ParserSpec extends DefaultSuite:
     )
   }
 
-  test("optional parenthesis works when parenthesis are present") {
+  test("parenthesis succeeds when parenthesis are present") {
 
-    val p = optionalParenthesis(digits)
+    val p = parenthesis(digits)
 
     assertEquals(
       p.parseAll("(1234)"),
@@ -78,12 +78,12 @@ class ParserSpec extends DefaultSuite:
     )
   }
 
-  test("optional parenthesis works when parenthesis are not present") {
+  test("parenthesis fails when parenthesis are not present") {
 
-    val p = optionalParenthesis(digits)
+    val p = parenthesis(digits)
 
     assertEquals(
       p.parseAll("1234"),
-      Some(1234)
+      None
     )
   }
