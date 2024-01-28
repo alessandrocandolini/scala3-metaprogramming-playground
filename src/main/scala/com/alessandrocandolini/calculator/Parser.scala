@@ -19,6 +19,8 @@ object Parser:
       p.combineK(p2)
   }
 
+  private def pure[A](a: A): Parser[A] = Applicative[Parser].pure(a)
+
   def choose[A](one: Parser[A], other: Parser[A]*): Parser[A] =
     NonEmptyList.fromList(other.toList) match {
       case Some(ps) => ps.foldLeft(one) { case (p1, p2) => p1.orElse(p2) }
@@ -46,18 +48,24 @@ object Parser:
   val newline: Parser[Unit]    = char('\n').void
   val space: Parser[Unit]      = char(' ').void
 
-  def parenthesis[A](parser: Parser[A]): Parser[A] =
-    openBrace *> parser <* closeBrace
-
   extension [A](p: Parser[A]) {
-    def repeat: Parser[List[A]] =
-      p.map(a => List(a)).flatMap { as =>
-        p.repeat.map(b => as ++ b).orElse(Applicative[Parser].pure(as))
+
+    def optional: Parser[Option[A]] = p.map(Some.apply).orElse(pure(None))
+
+    def repeat: Parser[NonEmptyList[A]] =
+      p.map(a => NonEmptyList.of(a)).flatMap { as =>
+        p.repeat.map(b => as <+> b).orElse(pure(as))
       }
+
+    def repeat0: Parser[List[A]] =
+      p.repeat.map(_.toList).orElse(pure(List.empty))
   }
 
-  val spaces: Parser[Unit] = space.repeat.void
+  def optionalParenthesis[A](parser: Parser[A]): Parser[A] =
+    openBrace.optional.void *> parser <* closeBrace.optional.void
+
+  val spaces: Parser[Unit] = space.repeat0.void
 
   def digit: Parser[Char] = anyChar.filter(_.isDigit)
 
-  def digits: Parser[Int] = digit.repeat.mapFilter(_.mkString.toIntOption)
+  def digits: Parser[Int] = digit.repeat.mapFilter(_.toList.mkString.toIntOption)

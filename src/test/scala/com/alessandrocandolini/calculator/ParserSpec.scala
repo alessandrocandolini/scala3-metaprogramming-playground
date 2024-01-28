@@ -57,3 +57,33 @@ class ParserSpec extends DefaultSuite:
       Some((1234, "hello"))
     )
   }
+
+  test("spaces parser supports also 0 spaces") {
+
+    val p = (digits, spaces *> string("hello")).tupled
+
+    assertEquals(
+      p.parseAll("1234hello"),
+      Some((1234, "hello"))
+    )
+  }
+
+  test("optional parenthesis works when parenthesis are present") {
+
+    val p = optionalParenthesis(digits)
+
+    assertEquals(
+      p.parseAll("(1234)"),
+      Some(1234)
+    )
+  }
+
+  test("optional parenthesis works when parenthesis are not present") {
+
+    val p = optionalParenthesis(digits)
+
+    assertEquals(
+      p.parseAll("1234"),
+      Some(1234)
+    )
+  }
