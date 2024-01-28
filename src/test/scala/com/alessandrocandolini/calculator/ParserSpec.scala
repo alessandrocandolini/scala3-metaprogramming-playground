@@ -1,5 +1,6 @@
 package com.alessandrocandolini.calculator
 
+import cats.data.NonEmptyList
 import cats.implicits.{catsSyntaxApplyOps, catsSyntaxTuple2Semigroupal}
 import com.alessandrocandolini.DefaultSuite
 import com.alessandrocandolini.calculator.Parser.*
@@ -84,6 +85,66 @@ class ParserSpec extends DefaultSuite:
 
     assertEquals(
       p.parseAll("1234"),
+      None
+    )
+  }
+
+  test("nested arenthesis succeeds when parenthesis are present twice") {
+
+    val p = parenthesis(parenthesis(digits))
+
+    assertEquals(
+      p.parseAll("((1234))"),
+      Some(1234)
+    )
+  }
+
+  test("repeat fails on empty string") {
+
+    val p = string("1234").repeat
+
+    assertEquals(
+      p.parseAll(""),
+      None
+    )
+  }
+
+  test("repeat fails on empty string") {
+
+    val p: Parser[NonEmptyList[String]] = string("1234").repeat
+
+    assertEquals(
+      p.parseAll(""),
+      None
+    )
+  }
+
+  test("repeat0 succeeds on empty string") {
+
+    val p: Parser[List[String]] = string("1234").repeat0
+
+    assertEquals(
+      p.parseAll(""),
+      Some(List.empty)
+    )
+  }
+
+  test("repeat succeeds on repeated string") {
+
+    val p: Parser[NonEmptyList[String]] = string("1234").repeat
+
+    assertEquals(
+      p.parseAll("1234123412341234"),
+      Some(NonEmptyList.fromListUnsafe(List.fill(4)("1234")))
+    )
+  }
+
+  test("repeat fails on partially repeated string") {
+
+    val p: Parser[NonEmptyList[String]] = string("1234").repeat
+
+    assertEquals(
+      p.parseAll("123412341234123"),
       None
     )
   }

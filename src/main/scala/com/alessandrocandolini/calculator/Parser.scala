@@ -68,7 +68,7 @@ object Parser:
   }
 
   def parenthesis[A](parser: Parser[A]): Parser[A] =
-    openBrace.void *> parser <* closeBrace.void
+    openBrace *> parser <* closeBrace
 
   val spaces: Parser[Unit] = space.repeat0.void
 
