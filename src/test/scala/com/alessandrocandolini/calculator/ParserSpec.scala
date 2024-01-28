@@ -1,7 +1,7 @@
 package com.alessandrocandolini.calculator
 
 import cats.data.NonEmptyList
-import cats.implicits.{catsSyntaxApplyOps, catsSyntaxTuple2Semigroupal}
+import cats.implicits.*
 import com.alessandrocandolini.DefaultSuite
 import com.alessandrocandolini.calculator.Parser.*
 
@@ -146,5 +146,110 @@ class ParserSpec extends DefaultSuite:
     assertEquals(
       p.parseAll("123412341234123"),
       None
+    )
+  }
+
+  test("orElse works with partially overlapping strings") {
+    val p = string("falser").orElse(string("false"))
+
+    assertEquals(
+      p.parseAll("false"),
+      Some("false")
+    )
+
+    assertEquals(
+      p.parseAll("falser"),
+      Some("falser")
+    )
+  }
+
+  test("orElse works with parenthesis and without parenthesis, even in presence of repeat") {
+    val base = string("false").repeat
+    val p    = parenthesis(base).orElse(base)
+
+    assertEquals(
+      p.parseAll("false"),
+      Some(NonEmptyList.of("false"))
+    )
+
+    assertEquals(
+      p.parseAll("(false)"),
+      Some(NonEmptyList.of("false"))
+    )
+
+    assertEquals(
+      p.parseAll("(falsefalsefalse)"),
+      Some(NonEmptyList.of("false", "false", "false"))
+    )
+  }
+
+  test("orElse with digits") {
+    val p: Parser[NonEmptyList[Int]] = parenthesis(digits).orElse(digits).repeat
+
+    assertEquals(
+      p.parseAll("1234"),
+      Some(NonEmptyList.of(1234))
+    )
+
+    assertEquals(
+      p.parseAll("(1234)"),
+      Some(NonEmptyList.of(1234))
+    )
+
+    assertEquals(
+      p.parseAll("(1234)"),
+      Some(NonEmptyList.of(1234))
+    )
+
+    assertEquals(
+      p.parseAll("(1234)(2345)3456"),
+      Some(NonEmptyList.of(1234, 2345, 3456))
+    )
+  }
+
+  test("orElse with digits and spaces") {
+
+    val d = spaces *> digits <* spaces
+
+    val p: Parser[NonEmptyList[Int]] = parenthesis(d).orElse(d).repeat
+
+    assertEquals(
+      p.parseAll("1234 "),
+      Some(NonEmptyList.of(1234))
+    )
+
+    assertEquals(
+      p.parseAll("(1234)"),
+      Some(NonEmptyList.of(1234))
+    )
+
+    assertEquals(
+      p.parseAll("(1234)"),
+      Some(NonEmptyList.of(1234))
+    )
+
+    assertEquals(
+      p.parseAll("(1234 )( 2345) 3456"),
+      Some(NonEmptyList.of(1234, 2345, 3456))
+    )
+
+    assertEquals(
+      p.parseAll("(1234 ) ( 2345) 3456"),
+      None,
+      "does not accept spaces between () per construction"
+    )
+  }
+
+  test("mapN") {
+
+    case class User(name: String, age: Int, surname: String)
+
+    val d = (alpha, digits, alpha).mapN(User.apply)
+
+    val p: Parser[User] = parenthesis(d).orElse(d)
+
+    assertEquals(
+      p.parseAll("john1234green"),
+      Some(User("john", 1234, "green"))
     )
   }

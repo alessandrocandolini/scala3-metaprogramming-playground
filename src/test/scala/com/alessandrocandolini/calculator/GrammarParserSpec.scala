@@ -1,9 +1,9 @@
 package com.alessandrocandolini.calculator
 
-import cats.implicits.{catsSyntaxApplyOps, catsSyntaxTuple2Semigroupal}
+import cats.implicits.*
 import com.alessandrocandolini.DefaultSuite
-import com.alessandrocandolini.calculator.GrammarParser.{literalP, parseAst}
-import com.alessandrocandolini.calculator.AstF.*
+import com.alessandrocandolini.calculator.GrammarParser.{literalP, operationParser, parseAst, realParser}
+import com.alessandrocandolini.calculator.AstF.{Ast, *}
 
 import scala.language.implicitConversions
 
@@ -34,9 +34,16 @@ class GrammarParserSpec extends DefaultSuite:
 
   test("can parse nested expression with parenthesis".ignore) {
     val expected: Ast[Int] =
-      literal(2) * (literal(3) + literal(4))
+      literal(4) + (literal(2) * literal(3))
     assertEquals(
-      parseAst("(2*3)+4"),
+      parseAst("(4+(2*3))"),
       Some(expected)
     )
   }
+
+//  test("experiment3") {
+//    assertEquals(
+//      p.parseAll("2"),
+//      Some(literal(2))
+//    )
+//  }
