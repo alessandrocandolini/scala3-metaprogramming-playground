@@ -19,9 +19,11 @@ enum BinaryOperation:
 
 object AstF:
 
-  type Ast[A] = Fix[[B] =>> AstF[A, B]]
+  type Ast[A] = Fix[AstF[A, _]]
 
-  def literal[A](value: A): Ast[A] = Fix(LiteralF(value))
+  extension [A](value: A) {
+    def literal: Ast[A] = Fix(LiteralF(value))
+  }
 
   def binaryOperation[A](operation: BinaryOperation, value1: Ast[A], value2: Ast[A]): Ast[A] =
     Fix(BinaryOperationF(operation, value1, value2))

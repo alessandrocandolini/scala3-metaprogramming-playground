@@ -17,7 +17,8 @@ object Settings {
       "-explain",
       "-Wvalue-discard",
       "-Wunused:all",
-      "-Xcheck-macros"
+      "-Xcheck-macros",
+      "-Ykind-projector:underscores"
     )
   )
 
