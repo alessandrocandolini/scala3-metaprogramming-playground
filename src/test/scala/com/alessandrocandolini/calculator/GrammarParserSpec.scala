@@ -17,7 +17,7 @@ class GrammarParserSpec extends DefaultSuite:
   }
 
   test("can parse simple expression with parenthesis") {
-    val expected : Ast[Int] = literal(14) + literal(7)
+    val expected: Ast[Int] = literal(14) + literal(7)
     assertEquals(
       parseAst("(14+7)"),
       Some(expected)
@@ -25,7 +25,7 @@ class GrammarParserSpec extends DefaultSuite:
   }
 
   test("can parse simple expression without parenthesis".ignore) {
-    val expected : Ast[Int] = literal(14) + literal(7)
+    val expected: Ast[Int] = literal(14) + literal(7)
     assertEquals(
       parseAst("14+7"),
       Some(expected)
@@ -40,4 +40,3 @@ class GrammarParserSpec extends DefaultSuite:
       Some(expected)
     )
   }
-
