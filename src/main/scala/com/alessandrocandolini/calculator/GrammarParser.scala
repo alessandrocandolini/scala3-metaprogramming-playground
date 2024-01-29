@@ -6,24 +6,28 @@ import com.alessandrocandolini.calculator.Parser.{chainl1, char, choose, double,
 
 object GrammarParser:
 
-  def preprocess(s: String): String = s.trim.replaceAll(" ", "")
+  def parseAst(s: String): Option[Ast[Double]] =
+    parser.parseAll(preprocess(s))
 
-  def parser: Parser[Ast[Double]] =
-    chainl1(termParser, lowPriorityOperation.map(op => a1 => a2 => binaryOperation(op, a1, a2)))
+  private def preprocess(s: String): String =
+    s.trim.replaceAll(" ", "")
 
-  def termParser: Parser[Ast[Double]] =
+  private def parser: Parser[Ast[Double]] =
+    chainl1(
+      highPriorityParser,
+      lowPriorityOperation.map(op => a1 => a2 => binaryOperation(op, a1, a2))
+    )
+
+  private def highPriorityParser: Parser[Ast[Double]] =
     chainl1(
       parenthesisedParser,
       highPriorityOperation.map(op => a1 => a2 => binaryOperation(op, a1, a2))
     )
 
-  def parenthesisedParser: Parser[Ast[Double]] =
+  private def parenthesisedParser: Parser[Ast[Double]] =
     literalP.orElse(parenthesis(parser))
 
-  val literalP: Parser[Ast[Double]] = double.map(literal)
-
-  def parseAst(s: String): Option[Ast[Double]] =
-    parser.parseAll(preprocess(s))
+  private val literalP: Parser[Ast[Double]] = double.map(literal)
 
   def lowPriorityOperation: Parser[BinaryOperation] = choose(
     char('+').as(BinaryOperation.Add),
