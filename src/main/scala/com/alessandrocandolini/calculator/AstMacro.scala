@@ -1,33 +1,30 @@
 package com.alessandrocandolini.calculator
 
+import cats.implicits.catsSyntaxEither
 import com.alessandrocandolini.calculator.AstF.Ast
 import com.alessandrocandolini.calculator.Interpreter.evaluate
 import com.alessandrocandolini.macros.MacroUtils.{asSingleStringOrFail, fail}
 
 import scala.quoted.{Expr, Quotes, ToExpr}
 
+private enum AstMacroError:
+  case UnsupportedStringInterpolation
+  case EvaluationError(e: EvalError)
+  case ParsingError(expression: String)
+
+object AstMacroError:
+  extension (e: AstMacroError) {
+    def message: String = e match
+      case UnsupportedStringInterpolation                => "string interpolation unsupported"
+      case EvaluationError(EvalError.CannotDivideByZero) => "division by zero is not defined"
+      case ParsingError(s)                               => s"error parsing expression $s"
+  }
+
 object AstMacro:
 
   extension (inline context: StringContext) {
-    inline def ast(inline args: Any*): Ast[Double] =
-      ${ astImpl('{ context }, '{ args }) }
-
-    inline def eval(inline args: Any*): Double =
+    transparent inline def eval(inline args: Any*): Double =
       ${ evalImpl('{ context }, '{ args }) }
-  }
-
-  private def astImpl(stringContextExpr: Expr[StringContext], argsExpr: Expr[Seq[Any]])(using
-    quotes: Quotes
-  ): Expr[Ast[Double]] = {
-    val stringContext = stringContextExpr.valueOrAbort
-
-    stringContext.asSingleStringOrFail match {
-      case Some(s) =>
-        GrammarParser.parseAst(s) match
-          case Some(_) => '{ GrammarParser.parseAst(${ Expr(s) }).get } // need to find a way to ave ExprrTo
-          case None    => fail(s"error parsing $s")
-      case None    => fail("string interpolation unsupported", argsExpr)
-    }
   }
 
   private def evalImpl(stringContextExpr: Expr[StringContext], argsExpr: Expr[Seq[Any]])(using
@@ -35,14 +32,14 @@ object AstMacro:
   ): Expr[Double] = {
     val stringContext = stringContextExpr.valueOrAbort
 
-    stringContext.asSingleStringOrFail match {
-      case Some(s) =>
-        GrammarParser.parseAst(s) match
-          case Some(ast) =>
-            ast.evaluate match
-              case Left(EvalError.CannotDivideByZero) => fail("division by zero not defined")
-              case Right(value)                       => Expr(value)
-          case None      => fail(s"error parsing $s")
-      case None    => fail("string interpolation unsupported", argsExpr)
+    val r: Either[AstMacroError, Double] = for {
+      s   <- stringContext.asSingleStringOrFail.toRight(AstMacroError.UnsupportedStringInterpolation)
+      ast <- GrammarParser.parseAst(s).toRight(AstMacroError.ParsingError(s))
+      res <- ast.evaluate.leftMap(AstMacroError.EvaluationError.apply)
+    } yield res
+
+    r match {
+      case Left(e)      => fail(e.message)
+      case Right(value) => Expr(value)
     }
   }

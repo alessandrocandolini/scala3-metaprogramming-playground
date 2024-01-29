@@ -26,26 +26,3 @@ object AssertMacro:
       )
     }
   }
-
-  inline def assertDoubleEquals(
-    inline obtained: Double,
-    inline expected: Double
-  ): Unit =
-    ${ assertDoubleEqualsImpl('{ obtained }, '{ expected }) }
-
-  private def assertDoubleEqualsImpl(
-    obtainedExpr: Expr[Double],
-    expectedExpr: Expr[Double]
-  )(using quotes: Quotes): Expr[Unit] = {
-
-    val obtained = obtainedExpr.valueOrAbort
-    val expected = expectedExpr.valueOrAbort
-
-    if (obtained == expected) {
-      '{ () }
-    } else {
-      quotes.reflect.report.errorAndAbort(
-        s"values are not the same: expected $expected but got $obtained instead."
-      )
-    }
-  }
