@@ -19,14 +19,13 @@ object GrammarParser:
   val literalP: Parser[Ast[Int]] = digits
     .map(literal)
 
-  val binaryOperationP: Parser[Ast[Int]] = (realParser, operationParser, realParser).mapN {
+  val binaryOperationP: Parser[Ast[Int]] = parenthesis((realParser, operationParser, realParser).mapN {
     case (v1, op, v2) =>
       binaryOperation(op, v1, v2)
-  }
+  })
 
   def realParser: Parser[Ast[Int]] =
-    parenthesis(binaryOperationP)
-      .orElse(literalP)
+    literalP.orElse(binaryOperationP)
 
   def parseAst(s: String): Option[Ast[Int]] =
     parser.parseAll(preprocess(s))
