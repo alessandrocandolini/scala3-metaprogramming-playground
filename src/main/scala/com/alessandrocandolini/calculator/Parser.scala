@@ -89,6 +89,13 @@ object Parser:
 
   def alpha: Parser[String] = nonDigit.repeat.map(_.toList.mkString)
 
+  def double: Parser[Double] = digit.repeat.flatMap { digits =>
+    val ds = digits.toList
+    (char('.'), digit.repeat).mapN { case (dot, decimal) =>
+      ds ++ List(dot) ++ decimal.toList
+    }.orElse(pure(ds))
+  }.mapFilter(_.mkString.toDoubleOption)
+
   private def withLogs[A](message: => String)(p: Parser[A]): Parser[A] = StateT { s =>
     val res = p.run(s)
     val m   = res match

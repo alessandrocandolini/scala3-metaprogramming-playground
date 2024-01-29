@@ -253,3 +253,17 @@ class ParserSpec extends DefaultSuite:
       Some(User("john", 1234, "green"))
     )
   }
+
+  test("double can parse integer numbers") {
+    assertEquals(
+      double.parseAll("1234"),
+      Some(1234d)
+    )
+  }
+
+  test("double can parse decimal numbers") {
+    assertEquals(
+      double.parseAll("1234.57"),
+      Some(1234.57)
+    )
+  }
