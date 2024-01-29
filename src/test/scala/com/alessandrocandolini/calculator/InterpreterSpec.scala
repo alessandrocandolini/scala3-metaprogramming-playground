@@ -10,15 +10,16 @@ import scala.language.implicitConversions
 class InterpreterSpec extends DefaultSuite:
 
   test("evaluate simple ast") {
-    val ast: Ast[Int] = (3.literal + 4.literal) * (2.literal + 5.literal) + 6.literal
+    val ast: Ast[Double] = (3d.literal + 4d.literal) * (2d.literal + 5d.literal) + 6d.literal
     assertEquals(
       ast.evaluate,
-      Right(55)
+      Right(55.0)
     )
   }
 
   test("evaluate simple ast with division by 0") {
-    val ast: Ast[Int] = (literal(3) + literal(4)) / ((literal(2) * literal(3)) - literal(5) - literal(1))
+    val ast: Ast[Double] =
+      (literal(3d) + literal(4d)) / ((literal(2d) * literal(3d)) - literal(5.5) - literal(0.5))
     assertEquals(
       ast.evaluate,
       Left(EvalError.CannotDivideByZero)

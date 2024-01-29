@@ -23,7 +23,7 @@ object Program:
       case Right(value) => IO.println(s"Result: $value").as(ExitCode.Success)
     }
 
-  def logic(s: String): Either[ProgramError, Int] = for {
+  def logic(s: String): Either[ProgramError, Double] = for {
     ast <- GrammarParser.parseAst(s).toRight(ProgramError.ParsingError)
     res <- ast.evaluate.leftMap(ProgramError.InterpreterError.apply)
   } yield res

@@ -11,30 +11,30 @@ class GrammarParserSpec extends DefaultSuite:
 
   test("can parse value") {
     assertEquals(
-      parseAst("14"),
-      Some(literal(14))
+      parseAst("14.4"),
+      Some(literal(14.4))
     )
   }
 
   test("can parse simple expression with parenthesis") {
-    val expected: Ast[Int] = literal(14) + literal(7)
+    val expected: Ast[Double] = literal(14d) + literal(7.1)
     assertEquals(
-      parseAst("(14+7)"),
+      parseAst("(14+7.1)"),
       Some(expected)
     )
   }
 
   test("can parse simple expression without parenthesis".ignore) {
-    val expected: Ast[Int] = literal(14) + literal(7)
+    val expected: Ast[Double] = literal(14d) + literal(7.1)
     assertEquals(
-      parseAst("14+7"),
+      parseAst("14+7.1"),
       Some(expected)
     )
   }
 
   test("can parse nested expression with parenthesis".ignore) {
-    val expected: Ast[Int] =
-      literal(4) + (literal(2) * literal(3))
+    val expected: Ast[Double] =
+      literal(4.0) + (literal(2.0) * literal(3.0))
     assertEquals(
       parseAst("(4+(2*3))"),
       Some(expected)

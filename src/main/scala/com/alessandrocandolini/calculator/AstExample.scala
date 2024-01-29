@@ -1,8 +1,8 @@
 package com.alessandrocandolini.calculator
 
 import com.alessandrocandolini.calculator.AstMacro.eval
-import com.alessandrocandolini.macros.AssertMacro.assertEquals
+import com.alessandrocandolini.macros.AssertMacro.assertDoubleEquals
 
 object AstExample:
 
-  assertEquals(eval"2*(3+4)", 14)
+  assertDoubleEquals(eval"2*(3+4)", 14d)

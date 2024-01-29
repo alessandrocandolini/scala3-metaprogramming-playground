@@ -9,13 +9,14 @@ import com.alessandrocandolini.calculator.Parser.*
 
 class Experiment extends DefaultSuite:
 
-  val binaryOperation2P: Parser[Ast[Int]] = (literalP, operationParser, literalP).mapN { case (v1, op, v2) =>
-    binaryOperation(op, v1, v2)
+  val binaryOperation2P: Parser[Ast[Double]] = (literalP, operationParser, literalP).mapN {
+    case (v1, op, v2) =>
+      binaryOperation(op, v1, v2)
   }
 
-  val p: Parser[Ast[Int]] = parenthesis(binaryOperation2P).orElse(binaryOperation2P).orElse(literalP)
+  val p: Parser[Ast[Double]] = parenthesis(binaryOperation2P).orElse(binaryOperation2P).orElse(literalP)
 
-  val expected: Ast[Int] = literal(2) * literal(3)
+  val expected: Ast[Double] = literal(2.0) * literal(3.0)
 
   test("experiment1") {
 

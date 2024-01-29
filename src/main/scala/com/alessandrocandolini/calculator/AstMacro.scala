@@ -9,16 +9,16 @@ import scala.quoted.{Expr, Quotes, ToExpr}
 object AstMacro:
 
   extension (inline context: StringContext) {
-    inline def ast(inline args: Any*): Ast[Int] =
+    inline def ast(inline args: Any*): Ast[Double] =
       ${ astImpl('{ context }, '{ args }) }
 
-    inline def eval(inline args: Any*): Int =
+    inline def eval(inline args: Any*): Double =
       ${ evalImpl('{ context }, '{ args }) }
   }
 
   private def astImpl(stringContextExpr: Expr[StringContext], argsExpr: Expr[Seq[Any]])(using
     quotes: Quotes
-  ): Expr[Ast[Int]] = {
+  ): Expr[Ast[Double]] = {
     val stringContext = stringContextExpr.valueOrAbort
 
     stringContext.asSingleStringOrFail match {
@@ -32,7 +32,7 @@ object AstMacro:
 
   private def evalImpl(stringContextExpr: Expr[StringContext], argsExpr: Expr[Seq[Any]])(using
     quotes: Quotes
-  ): Expr[Int] = {
+  ): Expr[Double] = {
     val stringContext = stringContextExpr.valueOrAbort
 
     stringContext.asSingleStringOrFail match {
