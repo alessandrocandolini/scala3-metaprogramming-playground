@@ -14,23 +14,26 @@ object GrammarParser:
 
   val fakeParser = string("2*(3+4)").as(predefined)
 
-  val parser: Parser[Ast[Double]] = fakeParser.orElse(realParser)
+  val parser: Parser[Ast[Double]] = fakeParser.orElse(parenthesisedParser)
 
   val literalP: Parser[Ast[Double]] = double
     .map(literal)
 
-  val binaryOperationP: Parser[Ast[Double]] = parenthesis((realParser, operationParser, realParser).mapN {
-    case (v1, op, v2) =>
+  val parenthesisedBinaryOperationP: Parser[Ast[Double]] = parenthesis(
+    (parenthesisedParser, operationParser, parenthesisedParser).mapN { case (v1, op, v2) =>
       binaryOperation(op, v1, v2)
-  })
+    }
+  )
 
-  def realParser: Parser[Ast[Double]] =
-    literalP.orElse(binaryOperationP)
+  def parenthesisedParser: Parser[Ast[Double]] =
+    literalP.orElse(parenthesisedBinaryOperationP)
 
   def parseAst(s: String): Option[Ast[Double]] =
     parser.parseAll(preprocess(s))
 
   def operationParser: Parser[BinaryOperation] = choose(
     char('+').as(BinaryOperation.Add),
-    char('*').as(BinaryOperation.Multiply)
+    char('*').as(BinaryOperation.Multiply),
+    char('-').as(BinaryOperation.Subtract),
+    char('/').as(BinaryOperation.Divide)
   )
