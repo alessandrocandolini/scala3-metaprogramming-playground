@@ -77,9 +77,9 @@ class GrammarParserSpec extends DefaultSuite:
 
   test("can parse double nested expression with parenthesis, to the left and to the right") {
     val expected: Ast[Double] =
-      (literal(4.0) + (literal(2.0) - literal(5.1))) / (literal(3.5) * literal(1.0))
+      (literal(4.0) + (literal(2.0) - literal(5.1))) / (literal(3.5) * literal(1.1))
     assertEquals(
-      parseAst("((4+(2-5.1))/(3.5*1))"),
+      parseAst("((4+(2-5.1))/(3.5*1.1))"),
       Some(expected)
     )
   }
