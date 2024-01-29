@@ -96,6 +96,12 @@ object Parser:
     }.orElse(pure(digits))
   }.mapFilter(_.mkString_("").toDoubleOption)
 
+  // left-associative parser for a infix binary operation
+  def chainl1[A](p1: Parser[A], p2: Parser[A => A => A]): Parser[A] =
+    p1.flatMap { a1 =>
+      (p2, p1).mapN { case (operation, a2) => operation(a1)(a2) }.orElse(pure(a1))
+    }
+
   private def withLogs[A](message: => String)(p: Parser[A]): Parser[A] = StateT { s =>
     val res = p.run(s)
     val m   = res match

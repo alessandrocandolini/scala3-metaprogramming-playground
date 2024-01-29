@@ -84,10 +84,27 @@ class GrammarParserSpec extends DefaultSuite:
     )
   }
 
-  test("can parse simple expression without parenthesis".ignore) {
+  test("can parse simple expression without parenthesis") {
     val expected: Ast[Double] = literal(14d) + literal(7.1)
     assertEquals(
       parseAst("14+7.1"),
+      Some(expected)
+    )
+  }
+
+  test("can parse simple expression with operator precedence") {
+    val expected: Ast[Double] = literal(2d) * (literal(3d) + literal(4d))
+    assertEquals(
+      parseAst("2*(3+4)"),
+      Some(expected)
+    )
+  }
+
+  test("can parse simple expression with operator precedence example 2") {
+    val expected: Ast[Double] =
+      ((literal(1d) + literal(2d)) * literal(3d)) - ((literal(4d) / literal(5d)) - literal(3d))
+    assertEquals(
+      parseAst("(1+2)*3-(4/5-3)"),
       Some(expected)
     )
   }

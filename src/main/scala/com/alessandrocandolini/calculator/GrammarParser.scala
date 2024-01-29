@@ -2,38 +2,35 @@ package com.alessandrocandolini.calculator
 
 import cats.implicits.*
 import com.alessandrocandolini.calculator.AstF.{Ast, *}
-import com.alessandrocandolini.calculator.Parser.{char, choose, digits, double, parenthesis, parseAll, string}
-
-import scala.language.implicitConversions
+import com.alessandrocandolini.calculator.Parser.{chainl1, char, choose, double, parenthesis, parseAll}
 
 object GrammarParser:
 
-  def predefined: Ast[Double] = 2 * (3 + 4)
-
   def preprocess(s: String): String = s.trim.replaceAll(" ", "")
 
-  val fakeParser = string("2*(3+4)").as(predefined)
+  def parser: Parser[Ast[Double]] =
+    chainl1(termParser, lowPriorityOperation.map(op => a1 => a2 => binaryOperation(op, a1, a2)))
 
-  val parser: Parser[Ast[Double]] = fakeParser.orElse(parenthesisedParser)
-
-  val literalP: Parser[Ast[Double]] = double
-    .map(literal)
-
-  val parenthesisedBinaryOperationP: Parser[Ast[Double]] = parenthesis(
-    (parenthesisedParser, operationParser, parenthesisedParser).mapN { case (v1, op, v2) =>
-      binaryOperation(op, v1, v2)
-    }
-  )
+  def termParser: Parser[Ast[Double]] =
+    chainl1(
+      parenthesisedParser,
+      highPriorityOperation.map(op => a1 => a2 => binaryOperation(op, a1, a2))
+    )
 
   def parenthesisedParser: Parser[Ast[Double]] =
-    literalP.orElse(parenthesisedBinaryOperationP)
+    literalP.orElse(parenthesis(parser))
+
+  val literalP: Parser[Ast[Double]] = double.map(literal)
 
   def parseAst(s: String): Option[Ast[Double]] =
     parser.parseAll(preprocess(s))
 
-  def operationParser: Parser[BinaryOperation] = choose(
+  def lowPriorityOperation: Parser[BinaryOperation] = choose(
     char('+').as(BinaryOperation.Add),
+    char('-').as(BinaryOperation.Subtract)
+  )
+
+  def highPriorityOperation: Parser[BinaryOperation] = choose(
     char('*').as(BinaryOperation.Multiply),
-    char('-').as(BinaryOperation.Subtract),
     char('/').as(BinaryOperation.Divide)
   )

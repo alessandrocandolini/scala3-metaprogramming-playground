@@ -13,3 +13,5 @@ object AstExample:
   val example3: 2d = eval"2.0"
 
   val example4: 1.8d = eval"((3.6*1.5)/(5.1+(2-4.1)))"
+
+  val example5: 11.2d = eval"(1+2)*3-(4/5-3)"
