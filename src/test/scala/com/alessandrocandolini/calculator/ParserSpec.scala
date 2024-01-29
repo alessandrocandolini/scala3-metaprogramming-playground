@@ -149,7 +149,7 @@ class ParserSpec extends DefaultSuite:
     )
   }
 
-  test("orElse works with partially overlapping strings") {
+  test("orElse performs backtracking on partially overlapping strings") {
     val p = string("falser").orElse(string("false"))
 
     assertEquals(

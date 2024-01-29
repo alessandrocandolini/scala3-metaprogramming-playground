@@ -16,6 +16,7 @@ object Parser:
     def parseAll(s: String): Option[A] =
       parse(s).filter(_._1.isEmpty).map(_._2)
 
+    // performs backtracking, use wisely and be careful about exponential worst-case complexity
     def orElse(p2: Parser[A]): Parser[A] =
       p.combineK(withLogs("orElse")(p2))
   }
