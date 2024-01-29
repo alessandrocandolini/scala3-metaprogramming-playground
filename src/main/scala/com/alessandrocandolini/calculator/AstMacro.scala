@@ -4,6 +4,7 @@ import cats.implicits.catsSyntaxEither
 import com.alessandrocandolini.calculator.AstF.Ast
 import com.alessandrocandolini.calculator.Interpreter.evaluate
 import com.alessandrocandolini.macros.MacroUtils.{asSingleStringOrFail, fail}
+import AstMacroError.*
 
 import scala.quoted.{Expr, Quotes, ToExpr}
 
@@ -39,7 +40,8 @@ object AstMacro:
     } yield res
 
     r match {
-      case Left(e)      => fail(e.message)
-      case Right(value) => Expr(value)
+      case Left(e @ UnsupportedStringInterpolation) => fail(e.message, argsExpr)
+      case Left(e)                                  => fail(e.message)
+      case Right(value)                             => Expr(value)
     }
   }
