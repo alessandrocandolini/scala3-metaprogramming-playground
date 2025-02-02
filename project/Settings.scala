@@ -103,31 +103,30 @@ object Dependencies {
 
 object Versions {
 
-  //val scala              = "3.4.0-RC1"
-  val scala              = "3.3.1"
-  val cats               = "2.10.0"
+  val scala              = "3.6.3"
+  val cats               = "2.13.0"
   val fs2                = "3.9.3"
-  val catsEffect         = "3.5.3"
-  val kittens            = "3.2.0"
+  val catsEffect         = "3.6.0-RC1"
+  val kittens            = "3.4.0"
   val pureConfig         = "0.17.5"
   val decline            = "2.4.1"
   val catsParse          = "1.0.0"
-  val ducktape           = "0.1.11"
-  val iron               = "2.3.0"
+  val ducktape           = "0.2.0"
+  val iron               = "2.6.0"
   val droste             = "0.9.0"
 
-  val tapir              = "1.9.0"
-  val circe              = "0.14.6"
+  val tapir              = "1.10.4"
+  val circe              = "0.14.9"
   val sttp               = "3.9.1"
-  val netty              = "4.1.101.Final"
+  val netty              = "4.1.107.Final"
 
   val postgres           = "42.7.0"
-  val skunk              = "0.6.1"
+  val skunk              = "1.0.0-M8"
 
   val scalacheck         = "1.17.0"
   val scalacheckEffect   = "1.0.4"
   val scalaCheckToolbox  = "0.7.0"
-  val munit              = "1.0.0-M8"
+  val munit              = "1.1.0"
   val munitCE            = "2.0.0-M4"
 
 }

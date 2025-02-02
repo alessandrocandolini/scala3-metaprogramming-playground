@@ -28,7 +28,7 @@ object JsonMacro:
     val parts: Seq[String]                   = context.parts
     val pattern: Either[String, JsonPattern] = JsonPattern.parse(parts.toList).toRight("cannot parse pattern")
     pattern match
-      case Left(value)  =>
+      case Left(value) =>
         '{ Null } // quotes.reflect.report.errorAndAbort(s"StringContext.json error: $value")
       case Right(value) => compile(context, value)
 

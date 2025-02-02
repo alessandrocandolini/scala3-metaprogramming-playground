@@ -54,7 +54,10 @@ object Parser:
     string("true").as(true).orElse(string("false").as(false))
 
   def booleanCaseInsensitive: Parser[Boolean] =
-    choose(stringCaseInsensitive("true").as(true), stringCaseInsensitive("False").as(false))
+    choose(
+      stringCaseInsensitive("true").as(true),
+      stringCaseInsensitive("False").as(false)
+    )
 
   val openBrace: Parser[Unit]  = char('(').void
   val closeBrace: Parser[Unit] = char(')').void
